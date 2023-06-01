@@ -10,6 +10,7 @@ import threading
 char_mode = True
 stop_audio = False
 male_voices = [
+    "en_63",
     "en_20",
     "en_22",
     "en_23",
@@ -33,20 +34,7 @@ female_voices = [
     "en_21",
     "en_24",
 ]
-name_to_voices = [
-    {
-        "name": "None",
-        "audio": "en_63"
-    },
-    {
-        "name": "Ty",
-        "audio": "en_63"
-    },
-    {
-        "name": "Tyler",
-        "audio": "en_63"
-    },
-]
+name_to_voices = []
 
 
 male_voices_iter = iter(male_voices)
@@ -71,10 +59,12 @@ def load_names_and_genders():
 
 
 def get_audio_for_name(name):
+    # Check if the name already has a voice assigned
     for name_to_audio in name_to_voices:
         if name_to_audio["name"] == name:
             return name_to_audio["audio"]
-    # if the name is not in the list, ask user if it's male or female and add it
+
+    # If not, ask user if it's male or female and add it
     is_male = None
     while is_male not in ['m', 'f', '']:
         is_male = input(f"Is the name {name} male (m) or female (f)? ").lower()
@@ -86,9 +76,11 @@ def get_audio_for_name(name):
         "name": name,
         "audio": new_voice
     })
+
     # Save the name and gender to a text file
     with open('names_and_genders.txt', 'a') as f:
         f.write(f"{name},{is_male}\n")
+
     return new_voice
 
 
